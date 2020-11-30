@@ -3,12 +3,8 @@ package M12Spring.dto;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import M12Spring.exceptions.JobPositionUnkown;
 import M12Spring.exceptions.MissingSalariesException;
