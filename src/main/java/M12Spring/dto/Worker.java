@@ -44,9 +44,7 @@ public class Worker {
 	
 	// Constructors
 	
-	protected Worker() {
-		System.out.println("SOSO CONSTRUCTOR ----");
-	}
+	protected Worker() {}
 	
 	/**
 	 * Constructor for Worker object.
