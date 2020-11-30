@@ -1,7 +1,9 @@
 package M12Spring.dto;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 import javax.persistence.*;
 
@@ -44,14 +46,12 @@ public class Worker {
 	
 	// Constructors
 	
-	protected Worker() {}
+	protected Worker() {
+		initializeSalaries();
+	}
 	
-	/**
-	 * Constructor for Worker object.
-	 * 
-	 * @param name String with the worker's name.
-	 * @param position String stating the job position of the worked. Must be a company recognised job position defined in the Position enum attribute.
-	 */
+	/*
+	
 	@JsonCreator
 	public Worker(@JsonProperty("name") String name, @JsonProperty("position") String position) {
 
@@ -66,10 +66,11 @@ public class Worker {
 			this.annualSalary = (int)positionSalaries.get(position.toUpperCase());
 			
 		}else {
-			throw new JobPositionUnkown("Job Position Unkown: Only " + Position.values() + " positions are recognised. You entered an unknown job position (" + position + ").");
+			throw new JobPositionUnkown("\nJob Position Unkown: Only " + Arrays.toString(Position.values()) + " positions are recognised. You entered an unknown job position (" + position + ").");
 		}
 	}
 
+	*/
 
 	// Support methods for Constructors
 	
@@ -148,7 +149,15 @@ public class Worker {
 	 * @param position the position to set
 	 */
 	public void setPosition(String position) {
-		this.jobPosition = position;
+		
+		if( positionIsKnown(position)) {
+			this.jobPosition = position.toUpperCase();
+			// Because We do not know which property will be set first (jobPosition or annualSalary), 
+			// the salary is also set once the position is defined.
+			this.setAnnualSalary(positionSalaries.get(this.jobPosition));
+		}else {
+			throw new JobPositionUnkown("\nJob Position Unkown: Only " + Arrays.toString(Position.values()) + " positions are recognised. You entered an unknown job position (" + position + ").");
+		}
 	}
 
 	/**
@@ -162,6 +171,13 @@ public class Worker {
 	 * @param annualSalary the annualSalary to set
 	 */
 	public void setAnnualSalary(int annualSalary) {
-		this.annualSalary = annualSalary;
+		
+		// We'll allow to modify the worker salary but never to be higher than defined by Corporate rules.
+		int maxSalaryByPosition = positionSalaries.get(this.jobPosition);
+		
+		if (annualSalary <= maxSalaryByPosition)
+			this.annualSalary = annualSalary;
+		else
+			this.annualSalary = maxSalaryByPosition;
 	}
 }
