@@ -35,8 +35,8 @@ public class WorkerServiceImpl implements WorkerService {
 	}
 
 	@Override
-	public void removeWorker(Worker worker) {
-		workerDao.delete(worker);
+	public void removeWorker(Long id) {
+		workerDao.deleteById(id);
 	}
 
 	@Override

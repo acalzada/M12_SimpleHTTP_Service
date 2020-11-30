@@ -14,7 +14,7 @@ public interface WorkerService {
 	
 	public Worker updateWorker(Worker worker);
 	
-	public void removeWorker(Worker worker);
+	public void removeWorker(Long id);
 	
 	public List<Worker> findByJobPosition(String position); 
 

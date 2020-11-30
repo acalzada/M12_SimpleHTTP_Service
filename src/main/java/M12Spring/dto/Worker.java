@@ -1,9 +1,12 @@
 package M12Spring.dto;
 
 
-import java.util.EnumMap;
+import java.util.HashMap;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import M12Spring.exceptions.JobPositionUnkown;
 import M12Spring.exceptions.MissingSalariesException;
@@ -22,7 +25,7 @@ public class Worker {
 	// Order must match the job positions defined in Position enum attribute. 
 	private static int[] salaries = {100000, 80000, 85000, 60000, 50000, 30000, 40000};
 	
-	private static EnumMap<Position, Integer> positionSalaries = new EnumMap<Position, Integer>(Position.class);
+	private static HashMap<String, Integer> positionSalaries = new HashMap<String, Integer>();
 	
 	 
 	@Id
@@ -41,7 +44,9 @@ public class Worker {
 	
 	// Constructors
 	
-	protected Worker() {}
+	protected Worker() {
+		System.out.println("SOSO CONSTRUCTOR ----");
+	}
 	
 	/**
 	 * Constructor for Worker object.
@@ -49,17 +54,18 @@ public class Worker {
 	 * @param name String with the worker's name.
 	 * @param position String stating the job position of the worked. Must be a company recognised job position defined in the Position enum attribute.
 	 */
-	public Worker(String name, String position) {
-		
+	@JsonCreator
+	public Worker(@JsonProperty("name") String name, @JsonProperty("position") String position) {
+
 		initializeSalaries();
 		
 		this.name = name;
 		
 		
 		if( positionIsKnown(position)) {
-			
+
 			this.jobPosition = position.toUpperCase();
-			this.annualSalary = positionSalaries.get(position.toUpperCase());
+			this.annualSalary = (int)positionSalaries.get(position.toUpperCase());
 			
 		}else {
 			throw new JobPositionUnkown("Job Position Unkown: Only " + Position.values() + " positions are recognised. You entered an unknown job position (" + position + ").");
@@ -79,7 +85,7 @@ public class Worker {
 		
 		Position[] positionLabels = Position.values();
 		for(int idx = 0; idx < positionLabels.length; idx++) {
-			positionSalaries.put(positionLabels[idx], salaries[idx]);
+			positionSalaries.put(positionLabels[idx].name(), salaries[idx]);
 		}
 	}
 	

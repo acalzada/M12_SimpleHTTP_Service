@@ -4,9 +4,11 @@ package M12Spring.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +43,15 @@ public class WorkerController {
 	@GetMapping("/workers/job/{jobPosition}")
 	public List<Worker> getWorkersByJob(@PathVariable(name="jobPosition")String jobPosition){
 		return workerService.findByJobPosition(jobPosition);
+	}
+	
+	@PutMapping("/workers")
+	public Worker updateWorker(@RequestBody Worker worker) {
+		return workerService.updateWorker(worker);
+	}
+	
+	@DeleteMapping("/workers/{id}")
+	public void removeWorker(@PathVariable(name="id") Long id) {
+		workerService.removeWorker(id);
 	}
 }
